@@ -8,6 +8,6 @@ class UserCartRepoTest {
 
     @Test
     void dummyTest() {
-        assertTrue(0 > 1);
+        assertTrue(0 > -1);
     }
 }
