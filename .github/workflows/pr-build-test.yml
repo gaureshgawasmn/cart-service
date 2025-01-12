@@ -28,6 +28,9 @@ jobs:
 
       # Run tests and generate JaCoCo report
       - name: Run tests with JaCoCo
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PAT: ${{ secrets.MAVEN_PAT }}
         run: mvn clean verify
 
       # Upload JaCoCo HTML report as an artifact
@@ -35,14 +38,14 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
-          path: cart-service/target/site/jacoco/index.html
+          path: auth-service/target/site/jacoco/index.html
 
       # generates coverage-report.md and publishes as checkrun
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v4.8
         with:
-          coverage_results_path: cart-service/target/site/jacoco/jacoco.xml
+          coverage_results_path: auth-service/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
