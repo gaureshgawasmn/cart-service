@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <changeSet id="1" author="gauresh-gawas">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_carts"/>
+            </not>
+        </preConditions>
+        <createTable tableName="user_carts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Add unique constraint on user_id if needed -->
+        <addUniqueConstraint tableName="user_carts" columnNames="user_id" constraintName="uq_user_id"/>
+    </changeSet>
+
+    <changeSet id="2" author="gauresh-gawas">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="cart_items"/>
+            </not>
+        </preConditions>
+        <createTable tableName="cart_items">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint tableName="cart_items" columnNames="product_id, cart_id" constraintName="uq_product_cart"/>
+
+        <addForeignKeyConstraint
+                baseTableName="cart_items"
+                baseColumnNames="cart_id"
+                referencedTableName="user_carts"
+                referencedColumnNames="id"
+                constraintName="fk_cart_id_user_carts"/>
+    </changeSet>
+</databaseChangeLog>
