@@ -157,6 +157,13 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/gaureshgawasmn/gg-maven-central</url>
+		</repository>
+	</repositories>
+
 	<distributionManagement>
 		<repository>
 			<id>github</id>
