@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,10 +31,13 @@ public class UserCart {
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     @JoinColumn(name = "cart_id")
     private List<CartItem> items = new ArrayList<>();
 
     @Column(name = "total_price")
     private double totalPrice;
+
+    @Version
+    private Long version;
 }
