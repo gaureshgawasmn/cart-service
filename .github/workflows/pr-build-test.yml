@@ -19,40 +19,67 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Java and Maven
+      # Set up Maven settings for authentication
+      - name: Set up Maven authentication for GitHub Packages
+        uses: s4u/maven-settings-action@v2.5.0
+        with:
+          servers: |
+            [
+              {
+                "id": "github",
+                "configuration": {
+                  "httpHeaders": {
+                    "property": {
+                      "name": "Authorization",
+                      "value": "Bearer ${{ secrets.MAVEN_PAT }}"
+                    }
+                  }
+                }
+              }
+            ]
+
+
+      # Set up Maven and Java
       - name: Set Up Maven and Java
         uses: s4u/setup-maven-action@v1.12.0
         with:
           maven-version: '3.8.4'
           java-version: '17'
 
+      # Purge local repository for the specific dependency (force update)
+      - name: Purge local repository for auth-service-client
+        run: mvn dependency:purge-local-repository -DmanualInclude="com.techlabs.service:auth-service-client" -DreResolve=false
+
       # Run tests and generate JaCoCo report
       - name: Run tests with JaCoCo
-        run: mvn clean verify
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PAT: ${{ secrets.MAVEN_PAT }}
+        run: mvn clean verify -U
 
-      # Upload JaCoCo HTML report as an artifact
+      # Upload JaCoCo Report as an artifact
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
-          path: cart-service/target/site/jacoco/index.html
+          path: auth-service/target/site/jacoco/index.html
 
-      # generates coverage-report.md and publishes as checkrun
+      # JaCoCo Code Coverage Report
       - name: JaCoCo Code Coverage Report
         id: jacoco_reporter
         uses: PavanMudigonda/jacoco-reporter@v4.8
         with:
-          coverage_results_path: cart-service/target/site/jacoco/jacoco.xml
+          coverage_results_path: auth-service/target/site/jacoco/jacoco.xml
           coverage_report_name: Coverage
           coverage_report_title: JaCoCo
           github_token: ${{ secrets.GITHUB_TOKEN }}
           skip_check_run: false
           minimum_coverage: 80
-          fail_below_threshold: false # handling manually at last
+          fail_below_threshold: false
           publish_only_summary: false
 
-      # Publish Coverage Job Summary  # Optional
-      - name: Add Jacocoo report to workflow run summary
+      # Add JaCoCo report to workflow run summary
+      - name: Add JaCoCo report to workflow run summary
         run: |
           echo "| Outcome | Value |" >> $GITHUB_STEP_SUMMARY
           echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
@@ -61,7 +88,7 @@ jobs:
           echo "| :x: Number of Lines Missed | ${{ steps.jacoco_reporter.outputs.missed_lines }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Total Number of Lines | ${{ steps.jacoco_reporter.outputs.total_lines }} |" >> $GITHUB_STEP_SUMMARY
 
-      # Post a formatted comment to the PR with coverage data
+      # Post Code Coverage Results to PR
       - name: Post Code Coverage Results to PR
         uses: peter-evans/create-or-update-comment@v4
         with:
@@ -76,8 +103,9 @@ jobs:
             - :x: **Lines Missed**: ${{ steps.jacoco_reporter.outputs.missed_lines }}
             - **Total Lines**: ${{ steps.jacoco_reporter.outputs.total_lines }}
 
+      # Fail the build if code coverage is below threshold
       - name: Check Coverage and Fail If Below Threshold
         if: steps.jacoco_reporter.outputs.coverage_percentage < 80
         run: |
-          echo "Code coverage is below the threshold (80%)!"
+          echo "Code coverage is below the threshold (80%)! Coverage: ${{ steps.jacoco_reporter.outputs.coverage_percentage }}%"
           exit 1

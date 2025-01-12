@@ -20,3 +20,6 @@ spring:
     show-sql: 'true'
   liquibase:
     change-log: db/changelog-master.xml
+
+techlabs:
+  authServiceUrl: https://${MY_ENV_HOST}:${MY_ENV_PORT}/auth/

@@ -9,10 +9,12 @@ jobs:
   call-pr-build-workflow:
     uses: gaureshgawasmn/ci-workflows/.github/workflows/pr-build.yml@main
     with:
-      service-name: cart-service
+      service-name: auth-service
       docker-registry: docker.io/gaureshgawasmn
       environment: qa
       jvm-memory-size: -Xmx1024m
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PAT: ${{ secrets.MAVEN_PAT }}

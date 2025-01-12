@@ -9,13 +9,15 @@ jobs:
   call-merge-build-workflow:
     uses: gaureshgawasmn/ci-workflows/.github/workflows/merge-build.yml@main
     with:
-      service-name: cart-service
+      service-name: auth-service
       docker-registry: docker.io/gaureshgawasmn
       environment: dev
       jvm-memory-size: -Xmx512m
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+      MAVEN_PAT: ${{ secrets.MAVEN_PAT }}
 
   deploy-to-maven:
     runs-on: ubuntu-latest
