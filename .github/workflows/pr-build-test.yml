@@ -46,6 +46,10 @@ jobs:
           maven-version: '3.8.4'
           java-version: '17'
 
+      # Purge local repository for the specific dependency (force update)
+      - name: Purge local repository for auth-service-client
+        run: mvn dependency:purge-local-repository -DmanualInclude="com.techlabs.service:auth-service-client" -DreResolve=false
+
       # Run tests and generate JaCoCo report
       - name: Run tests with JaCoCo
         env:
