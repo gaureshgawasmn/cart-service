@@ -7,6 +7,14 @@
             <id>github</id>
             <username>${env.MAVEN_USERNAME}</username>
             <password>${env.MAVEN_PAT}</password>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>Authorization</name>
+                        <value>Bearer ${env.MAVEN_PAT}</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
         </server>
     </servers>
     <profiles>
