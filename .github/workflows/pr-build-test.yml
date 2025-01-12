@@ -57,7 +57,7 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PAT: ${{ secrets.MAVEN_PAT }}
-        run: mvn clean verify
+        run: mvn clean verify -X
 
       # Upload JaCoCo Report as an artifact
       - name: Upload JaCoCo Report
