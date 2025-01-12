@@ -58,6 +58,16 @@
             <artifactId>cart-service-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.techlabs.service</groupId>
+            <artifactId>auth-service-api</artifactId>
+            <version>1.0.${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.techlabs.service</groupId>
+            <artifactId>auth-service-client</artifactId>
+            <version>1.0.${revision}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.mapstruct</groupId>
