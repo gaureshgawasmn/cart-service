@@ -161,6 +161,9 @@
 		<repository>
 			<id>github</id>
 			<url>https://maven.pkg.github.com/gaureshgawasmn/gg-maven-central</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
