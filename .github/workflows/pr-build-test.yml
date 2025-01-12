@@ -46,12 +46,6 @@ jobs:
           maven-version: '3.8.4'
           java-version: '17'
 
-      # Set up Maven settings for authentication (if necessary)
-      - name: Set up Maven settings
-        run: |
-          mkdir -p ~/.m2
-          echo "<servers><server><id>github</id><username>${{ secrets.MAVEN_USERNAME }}</username><password>${{ secrets.MAVEN_PAT }}</password></server></servers>" > ~/.m2/settings.xml
-
       # Run tests and generate JaCoCo report
       - name: Run tests with JaCoCo
         env:
