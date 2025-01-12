@@ -19,6 +19,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Set up Maven settings for authentication
+      - name: Set up Maven authentication for GitHub Packages
+        uses: s4u/maven-settings-action@v2.5.0
+        with:
+          servers: |
+            [
+              {
+                "id": "github",
+                "configuration": {
+                  "httpHeaders": {
+                    "property": {
+                      "name": "Authorization",
+                      "value": "Bearer ${{ secrets.MAVEN_PAT }}"
+                    }
+                  }
+                }
+              }
+            ]
+
+
       # Set up Maven and Java
       - name: Set Up Maven and Java
         uses: s4u/setup-maven-action@v1.12.0
